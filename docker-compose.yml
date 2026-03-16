@@ -1,0 +1,200 @@
+version: "3.9"
+
+# =============================================================================
+# Canlı Skor & Bahis Oranları – Dispatcher Mikroservis Mimarisi
+# =============================================================================
+# Network Isolation:
+#   - frontend-net: Sadece Dispatcher bağlı, dış dünyaya açık (port 8080)
+#   - backend-net : Dispatcher + tüm mikroservisler + veritabanları (dışarıya kapalı)
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # DISPATCHER (API Gateway) – Tek giriş noktası
+  # ---------------------------------------------------------------------------
+  dispatcher:
+    build: ./dispatcher
+    container_name: dispatcher
+    ports:
+      - "${DISPATCHER_PORT:-8080}:8080"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-me}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - JWT_EXPIRATION_MINUTES=${JWT_EXPIRATION_MINUTES:-30}
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - MATCH_SERVICE_URL=http://match-service:8002
+      - BETTING_SERVICE_URL=http://betting-service:8003
+      - USER_SERVICE_URL=http://user-service:8004
+      - AUTH_REDIS_HOST=auth-redis
+      - AUTH_REDIS_PORT=6379
+    depends_on:
+      - auth-service
+      - match-service
+      - betting-service
+      - user-service
+    networks:
+      - frontend-net
+      - backend-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # AUTH SERVICE (Redis)
+  # ---------------------------------------------------------------------------
+  auth-service:
+    build: ./auth_service
+    container_name: auth-service
+    environment:
+      - REDIS_HOST=auth-redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - SECRET_KEY=${SECRET_KEY:-change-me}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - JWT_EXPIRATION_MINUTES=${JWT_EXPIRATION_MINUTES:-30}
+    depends_on:
+      - auth-redis
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  auth-redis:
+    image: redis:7-alpine
+    container_name: auth-redis
+    volumes:
+      - auth-redis-data:/data
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # MATCH SERVICE (MongoDB) – Canlı Skor
+  # ---------------------------------------------------------------------------
+  match-service:
+    build: ./match_service
+    container_name: match-service
+    environment:
+      - MONGO_HOST=match-mongo
+      - MONGO_PORT=27017
+      - MONGO_DB=match_db
+    depends_on:
+      - match-mongo
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  match-mongo:
+    image: mongo:7
+    container_name: match-mongo
+    volumes:
+      - match-mongo-data:/data/db
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # BETTING SERVICE (Redis) – Canlı Oran
+  # ---------------------------------------------------------------------------
+  betting-service:
+    build: ./betting_service
+    container_name: betting-service
+    environment:
+      - REDIS_HOST=betting-redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - MATCH_SERVICE_URL=http://match-service:8002
+    depends_on:
+      - betting-redis
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  betting-redis:
+    image: redis:7-alpine
+    container_name: betting-redis
+    volumes:
+      - betting-redis-data:/data
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # USER SERVICE (MongoDB) – Favori Takip
+  # ---------------------------------------------------------------------------
+  user-service:
+    build: ./user_service
+    container_name: user-service
+    environment:
+      - MONGO_HOST=user-mongo
+      - MONGO_PORT=27017
+      - MONGO_DB=user_db
+    depends_on:
+      - user-mongo
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  user-mongo:
+    image: mongo:7
+    container_name: user-mongo
+    volumes:
+      - user-mongo-data:/data/db
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # PROMETHEUS – Metrik toplama
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # GRAFANA – Görselleştirme
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: grafana
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    networks:
+      - frontend-net
+      - backend-net
+    restart: unless-stopped
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  frontend-net:
+    driver: bridge
+    # Dispatcher ve Grafana dış dünyaya bu ağ üzerinden açılır
+  backend-net:
+    driver: bridge
+    internal: true
+    # Mikroservisler ve veritabanları yalnızca bu iç ağda
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  auth-redis-data:
+  match-mongo-data:
+  betting-redis-data:
+  user-mongo-data:
+  prometheus-data:
+  grafana-data:
