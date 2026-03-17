@@ -1,0 +1,453 @@
+Warning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+=========================================================================================== test session starts ============================================================================================
+platform linux -- Python 3.10.12, pytest-8.3.4, pluggy-1.6.0 -- /home/duha/yazlab.II-I/dispatcher/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/duha/yazlab.II-I/dispatcher
+configfile: pytest.ini
+plugins: launch-testing-ros-0.19.13, ament-lint-0.12.15, ament-copyright-0.12.15, launch-testing-1.0.14, ament-flake8-0.12.15, ament-pep257-0.12.15, ament-xmllint-0.12.15, cov-6.0.0, asyncio-0.25.0, anyio-4.12.1
+asyncio: mode=auto, asyncio_default_fixture_loop_scope=None
+collected 14 items                                                                                                                                                                                         
+
+tests/test_routing.py::TestRouting::test_auth_route_forwards_to_auth_service FAILED                                                                                                                  [  7%]
+tests/test_routing.py::TestRouting::test_matches_route_forwards_to_match_service FAILED                                                                                                              [ 14%]
+tests/test_routing.py::TestRouting::test_single_match_route FAILED                                                                                                                                   [ 21%]
+tests/test_routing.py::TestRouting::test_odds_route_forwards_to_betting_service FAILED                                                                                                               [ 28%]
+tests/test_routing.py::TestRouting::test_users_route_forwards_to_user_service FAILED                                                                                                                 [ 35%]
+tests/test_routing.py::TestHTTPMethods::test_post_request_forwarded FAILED                                                                                                                           [ 42%]
+tests/test_routing.py::TestHTTPMethods::test_put_request_forwarded FAILED                                                                                                                            [ 50%]
+tests/test_routing.py::TestHTTPMethods::test_delete_request_forwarded FAILED                                                                                                                         [ 57%]
+tests/test_routing.py::TestUnknownRoutes::test_unknown_route_returns_404 PASSED                                                                                                                      [ 64%]
+tests/test_routing.py::TestUnknownRoutes::test_root_path_returns_info_or_404 PASSED                                                                                                                  [ 71%]
+tests/test_routing.py::TestHealthCheck::test_health_endpoint_returns_ok PASSED                                                                                                                       [ 78%]
+tests/test_routing.py::TestServiceRegistry::test_registry_has_all_services FAILED                                                                                                                    [ 85%]
+tests/test_routing.py::TestServiceRegistry::test_registry_returns_none_for_unknown_service FAILED                                                                                                    [ 92%]
+tests/test_routing.py::TestServiceRegistry::test_registry_returns_correct_urls FAILED                                                                                                                [100%]
+
+================================================================================================= FAILURES =================================================================================================
+___________________________________________________________________________ TestRouting.test_auth_route_forwards_to_auth_service ___________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestRouting object at 0x7205a88e3f70>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a8721900>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+_________________________________________________________________________ TestRouting.test_matches_route_forwards_to_match_service _________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestRouting object at 0x7205a8720100>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a864fc10>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+___________________________________________________________________________________ TestRouting.test_single_match_route ____________________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestRouting object at 0x7205a87202b0>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a887d810>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+_________________________________________________________________________ TestRouting.test_odds_route_forwards_to_betting_service __________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestRouting object at 0x7205a8720460>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a8617cd0>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+__________________________________________________________________________ TestRouting.test_users_route_forwards_to_user_service ___________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestRouting object at 0x7205a8720610>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a8723ee0>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+_______________________________________________________________________________ TestHTTPMethods.test_post_request_forwarded ________________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestHTTPMethods object at 0x7205a87209d0>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a87d9bd0>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+________________________________________________________________________________ TestHTTPMethods.test_put_request_forwarded ________________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestHTTPMethods object at 0x7205a8720b80>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a869ebc0>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+______________________________________________________________________________ TestHTTPMethods.test_delete_request_forwarded _______________________________________________________________________________
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+>           return getattr(thing, comp)
+E           AttributeError: module 'app.services' has no attribute 'router'
+
+/usr/lib/python3.10/unittest/mock.py:1248: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+args = (<tests.test_routing.TestHTTPMethods object at 0x7205a8720d30>,), keywargs = {'client': <starlette.testclient.TestClient object at 0x7205a87db8e0>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.10/unittest/mock.py:1376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/contextlib.py:135: in __enter__
+    return next(self.gen)
+/usr/lib/python3.10/unittest/mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.10/contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+/usr/lib/python3.10/unittest/mock.py:1431: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.10/unittest/mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+/usr/lib/python3.10/unittest/mock.py:1261: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = <module 'app.services' from '/home/duha/yazlab.II-I/dispatcher/app/services/__init__.py'>, comp = 'router', import_path = 'app.services.router'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+>           __import__(import_path)
+E           ModuleNotFoundError: No module named 'app.services.router'
+
+/usr/lib/python3.10/unittest/mock.py:1250: ModuleNotFoundError
+____________________________________________________________________________ TestServiceRegistry.test_registry_has_all_services ____________________________________________________________________________
+
+self = <tests.test_routing.TestServiceRegistry object at 0x7205a87201f0>
+
+    def test_registry_has_all_services(self):
+        """
+        ServiceRegistry en az 4 servisi (auth, match, betting, user) içermeli.
+        """
+>       from app.services.router import ServiceRegistry
+E       ModuleNotFoundError: No module named 'app.services.router'
+
+tests/test_routing.py:220: ModuleNotFoundError
+____________________________________________________________________ TestServiceRegistry.test_registry_returns_none_for_unknown_service ____________________________________________________________________
+
+self = <tests.test_routing.TestServiceRegistry object at 0x7205a87215d0>
+
+    def test_registry_returns_none_for_unknown_service(self):
+        """
+        Bilinmeyen bir servis adı için None döndürmeli.
+        """
+>       from app.services.router import ServiceRegistry
+E       ModuleNotFoundError: No module named 'app.services.router'
+
+tests/test_routing.py:233: ModuleNotFoundError
+__________________________________________________________________________ TestServiceRegistry.test_registry_returns_correct_urls __________________________________________________________________________
+
+self = <tests.test_routing.TestServiceRegistry object at 0x7205a8721780>
+
+    def test_registry_returns_correct_urls(self):
+        """
+        Her servis için doğru URL döndürmeli.
+        """
+>       from app.services.router import ServiceRegistry
+E       ModuleNotFoundError: No module named 'app.services.router'
+
+tests/test_routing.py:243: ModuleNotFoundError
+========================================================================================= short test summary info ==========================================================================================
+FAILED tests/test_routing.py::TestRouting::test_auth_route_forwards_to_auth_service - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestRouting::test_matches_route_forwards_to_match_service - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestRouting::test_single_match_route - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestRouting::test_odds_route_forwards_to_betting_service - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestRouting::test_users_route_forwards_to_user_service - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestHTTPMethods::test_post_request_forwarded - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestHTTPMethods::test_put_request_forwarded - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestHTTPMethods::test_delete_request_forwarded - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestServiceRegistry::test_registry_has_all_services - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestServiceRegistry::test_registry_returns_none_for_unknown_service - ModuleNotFoundError: No module named 'app.services.router'
+FAILED tests/test_routing.py::TestServiceRegistry::test_registry_returns_correct_urls - ModuleNotFoundError: No module named 'app.services.router'
+======================================================================================= 11 failed, 3 passed in 1.12s =======================================================================================
