@@ -1,7 +1,7 @@
 import os
 import uuid
 from abc import ABC, abstractmethod
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from jose import jwt, JWTError
 
@@ -33,7 +33,7 @@ class JWTTokenManager(BaseTokenManager):
 
     def create_token(self, data: dict) -> str:
         payload = data.copy()
-        expire = datetime.utcnow() + timedelta(minutes=self._expiration_minutes)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=self._expiration_minutes)
         payload.update({"exp": expire, "jti": uuid.uuid4().hex})
         return jwt.encode(payload, self._secret_key, algorithm=self._algorithm)
 

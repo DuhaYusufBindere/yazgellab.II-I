@@ -1,0 +1,32 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: auth_service
+plugins: anyio-4.12.1, asyncio-1.3.0
+collected 24 items
+
+tests/test_auth.py::TestJWTTokenManager::test_is_subclass_of_base PASSED [  4%]
+tests/test_auth.py::TestJWTTokenManager::test_create_token_returns_string PASSED [  8%]
+tests/test_auth.py::TestJWTTokenManager::test_verify_valid_token PASSED  [ 12%]
+tests/test_auth.py::TestJWTTokenManager::test_verify_invalid_token_returns_none PASSED [ 16%]
+tests/test_auth.py::TestJWTTokenManager::test_verify_wrong_secret_returns_none PASSED [ 20%]
+tests/test_auth.py::TestJWTTokenManager::test_each_token_has_unique_jti PASSED [ 25%]
+tests/test_auth.py::TestPasswordHashing::test_hash_password_returns_different_from_plain PASSED [ 29%]
+tests/test_auth.py::TestPasswordHashing::test_verify_correct_password PASSED [ 33%]
+tests/test_auth.py::TestPasswordHashing::test_verify_wrong_password PASSED [ 37%]
+tests/test_auth.py::TestRedisAuthRepository::test_is_subclass_of_base PASSED [ 41%]
+tests/test_auth.py::TestRedisAuthRepository::test_save_user PASSED       [ 45%]
+tests/test_auth.py::TestRedisAuthRepository::test_get_user_found PASSED  [ 50%]
+tests/test_auth.py::TestRedisAuthRepository::test_get_user_not_found PASSED [ 54%]
+tests/test_auth.py::TestRedisAuthRepository::test_user_exists_true PASSED [ 58%]
+tests/test_auth.py::TestRedisAuthRepository::test_user_exists_false PASSED [ 62%]
+tests/test_auth.py::TestRedisAuthRepository::test_save_token PASSED      [ 66%]
+tests/test_auth.py::TestRedisAuthRepository::test_delete_token PASSED    [ 70%]
+tests/test_auth.py::TestRedisAuthRepository::test_is_token_valid_true PASSED [ 75%]
+tests/test_auth.py::TestRedisAuthRepository::test_is_token_valid_false PASSED [ 79%]
+tests/test_auth.py::TestUserModels::test_user_create_valid PASSED        [ 83%]
+tests/test_auth.py::TestUserModels::test_user_create_short_username_raises PASSED [ 87%]
+tests/test_auth.py::TestUserModels::test_user_create_short_password_raises PASSED [ 91%]
+tests/test_auth.py::TestUserModels::test_user_default_role PASSED        [ 95%]
+tests/test_auth.py::TestUserModels::test_token_verify_request PASSED     [100%]
+
+============================= 24 passed in 1.92s ==============================

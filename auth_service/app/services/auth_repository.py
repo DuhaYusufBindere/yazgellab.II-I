@@ -2,12 +2,9 @@ import json
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from passlib.context import CryptContext
+import bcrypt
 
 from app.models.user import User
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class BaseAuthRepository(ABC):
@@ -76,8 +73,8 @@ class RedisAuthRepository(BaseAuthRepository):
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return bcrypt.checkpw(plain.encode(), hashed.encode())
