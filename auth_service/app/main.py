@@ -26,5 +26,4 @@ app.include_router(auth_router)
 
 @app.get("/health", tags=["health"])
 async def health_check():
-    """Auth Service sağlık kontrolü."""
     return {"status": "ok", "service": "auth-service"}
