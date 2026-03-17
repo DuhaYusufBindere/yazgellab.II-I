@@ -44,9 +44,7 @@ def _mock_response(status_code: int = 200, json_body: dict | None = None) -> Res
     return response
 
 
-# ===========================================================================
 # 1. Temel Yönlendirme Testleri
-# ===========================================================================
 
 class TestRouting:
     """Dispatcher'ın URL'ye göre doğru servise yönlendirmesini test eder."""
@@ -121,9 +119,7 @@ class TestRouting:
         assert "user-service" in str(call_args) or "8004" in str(call_args)
 
 
-# ===========================================================================
-# 2. HTTP Metotları Testleri (RMM Seviye 2)
-# ===========================================================================
+# 2. HTTP Metotları Testleri 
 
 class TestHTTPMethods:
     """Her HTTP metodunun doğru şekilde yönlendirildiğini test eder."""
@@ -159,9 +155,7 @@ class TestHTTPMethods:
         mock_forward.assert_called_once()
 
 
-# ===========================================================================
 # 3. Bilinmeyen Route Testleri
-# ===========================================================================
 
 class TestUnknownRoutes:
     """Tanımsız URL'lerin 404 döndürdüğünü test eder."""
@@ -186,9 +180,7 @@ class TestUnknownRoutes:
         assert response.status_code in (200, 404)
 
 
-# ===========================================================================
 # 4. Health Check Testi
-# ===========================================================================
 
 class TestHealthCheck:
     """Dispatcher health endpoint'inin çalıştığını doğrular."""
@@ -205,13 +197,16 @@ class TestHealthCheck:
         assert data["service"] == "dispatcher"
 
 
-# ===========================================================================
-# 5. ServiceRegistry Testleri
-# ===========================================================================
-
 class TestServiceRegistry:
-    
-    """Servis kayıt defterinin doğru yapılandırıldığını test eder."""
+    """
+    Somut ServiceRegistry sınıfının BaseServiceRegistry arayüzünü
+    doğru bir şekilde implemente ettiğini test eder.
+    """
+
+    def test_registry_is_subclass_of_base(self):
+        """ServiceRegistry, BaseServiceRegistry alt sınıfı olmalı (OOP)."""
+        from app.services.router import ServiceRegistry, BaseServiceRegistry
+        assert issubclass(ServiceRegistry, BaseServiceRegistry)
 
     def test_registry_has_all_services(self):
         """
@@ -255,3 +250,53 @@ class TestServiceRegistry:
 
         user_url = registry.get_service_url("users")
         assert "8004" in user_url
+
+
+# 6. RouterService 
+
+class TestRouterServiceOOP:
+    """
+    RouterService'in BaseRouterService arayüzünü doğru şekilde
+    implemente ettiğini ve Dependency Injection ile çalıştığını test eder.
+    """
+
+    def test_router_service_is_subclass_of_base(self):
+        """RouterService, BaseRouterService alt sınıfı olmalı (OOP)."""
+        from app.services.router import RouterService, BaseRouterService
+        assert issubclass(RouterService, BaseRouterService)
+
+    def test_router_service_requires_registry(self):
+        """RouterService, constructor'da bir BaseServiceRegistry beklemeli (DIP)."""
+        from app.services.router import RouterService, ServiceRegistry
+        registry = ServiceRegistry()
+        router = RouterService(registry=registry)
+        assert router._registry is registry
+
+    def test_resolve_target_url_returns_correct_url(self):
+        """resolve_target_url doğru tam URL'yi oluşturmalı."""
+        from app.services.router import RouterService, ServiceRegistry
+        registry = ServiceRegistry()
+        router = RouterService(registry=registry)
+
+        url = router.resolve_target_url("auth/login")
+        assert url is not None
+        assert "auth-service" in url or "8001" in url
+        assert "auth/login" in url
+
+    def test_resolve_target_url_returns_none_for_unknown(self):
+        """Bilinmeyen path için resolve_target_url None döndürmeli."""
+        from app.services.router import RouterService, ServiceRegistry
+        registry = ServiceRegistry()
+        router = RouterService(registry=registry)
+
+        url = router.resolve_target_url("unknown/endpoint")
+        assert url is None
+
+    def test_resolve_target_url_returns_none_for_empty(self):
+        """Boş path için resolve_target_url None döndürmeli."""
+        from app.services.router import RouterService, ServiceRegistry
+        registry = ServiceRegistry()
+        router = RouterService(registry=registry)
+
+        url = router.resolve_target_url("")
+        assert url is None
