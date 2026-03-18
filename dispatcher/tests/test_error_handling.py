@@ -90,16 +90,28 @@ class TestInternalServerError:
 
 class TestNotFoundError:
 
-    def test_unknown_route_returns_404_json(self, client):
+    @patch("httpx.AsyncClient.post", new_callable=AsyncMock)
+    def test_unknown_route_returns_404_json(self, mock_auth, client):
         """Bilinmeyen URL 404 ve JSON hata mesajı dönmeli."""
+        mock_auth.return_value = httpx.Response(
+            status_code=200,
+            json={"valid": True, "username": "test", "role": "user"},
+            request=httpx.Request("POST", "http://auth-service:8001/auth/verify"),
+        )
         response = client.get("/nonexistent/path",
                               headers={"Authorization": "Bearer valid_token"})
         assert response.status_code == 404
         data = response.json()
         assert "detail" in data
 
-    def test_404_has_proper_detail(self, client):
+    @patch("httpx.AsyncClient.post", new_callable=AsyncMock)
+    def test_404_has_proper_detail(self, mock_auth, client):
         """404 yanıtında açıklayıcı mesaj olmalı."""
+        mock_auth.return_value = httpx.Response(
+            status_code=200,
+            json={"valid": True, "username": "test", "role": "user"},
+            request=httpx.Request("POST", "http://auth-service:8001/auth/verify"),
+        )
         response = client.get("/completely/unknown",
                               headers={"Authorization": "Bearer valid_token"})
         assert response.status_code == 404

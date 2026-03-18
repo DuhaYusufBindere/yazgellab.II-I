@@ -20,13 +20,19 @@ from app.services.router import (
     ServiceRegistry,
 )
 from app.middleware.auth import AuthMiddleware, HttpTokenVerifier
+from app.middleware.error_handler import ErrorHandlerMiddleware, ErrorHandler, AppLogger
 
 app = FastAPI(
     title="Dispatcher API Gateway",
     description="Canlı Skor & Bahis Oranları Sistemi Dispatcher",
 )
 
-# Middleware'leri Dependency Injection (DIP) ile ekleme
+# 1. Error Handler Middleware (En diştaki katman olmalı, tüm hataları yakalamak için)
+logger = AppLogger()
+error_handler = ErrorHandler(logger=logger)
+app.add_middleware(ErrorHandlerMiddleware, error_handler=error_handler)
+
+# 2. Auth Middleware (Hata yakalayıcının altında çalışır)
 token_verifier = HttpTokenVerifier()
 app.add_middleware(AuthMiddleware, token_verifier=token_verifier)
 

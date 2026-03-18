@@ -1,0 +1,21 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: dispatcher
+configfile: pytest.ini
+plugins: anyio-4.12.1, asyncio-1.3.0
+collected 12 items
+
+tests/test_error_handling.py::TestErrorHandlerOOP::test_error_handler_is_subclass_of_base PASSED [  8%]
+tests/test_error_handling.py::TestErrorHandlerOOP::test_logger_is_subclass_of_base PASSED [ 16%]
+tests/test_error_handling.py::TestErrorHandlerOOP::test_error_handler_has_handle_method PASSED [ 25%]
+tests/test_error_handling.py::TestErrorHandlerOOP::test_logger_has_log_method PASSED [ 33%]
+tests/test_error_handling.py::TestInternalServerError::test_unhandled_exception_returns_500 PASSED [ 41%]
+tests/test_error_handling.py::TestInternalServerError::test_500_response_format PASSED [ 50%]
+tests/test_error_handling.py::TestNotFoundError::test_unknown_route_returns_404_json PASSED [ 58%]
+tests/test_error_handling.py::TestNotFoundError::test_404_has_proper_detail PASSED [ 66%]
+tests/test_error_handling.py::TestBadGatewayError::test_service_unavailable_returns_502 PASSED [ 75%]
+tests/test_error_handling.py::TestBadGatewayError::test_502_json_format PASSED [ 83%]
+tests/test_error_handling.py::TestUnauthorizedError::test_missing_token_returns_401 PASSED [ 91%]
+tests/test_error_handling.py::TestUnauthorizedError::test_invalid_token_returns_401 PASSED [100%]
+
+============================= 12 passed in 1.78s ==============================
