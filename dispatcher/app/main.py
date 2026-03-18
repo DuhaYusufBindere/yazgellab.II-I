@@ -19,15 +19,16 @@ from app.services.router import (
     RouterService,
     ServiceRegistry,
 )
-from app.middleware.auth import AuthMiddleware
+from app.middleware.auth import AuthMiddleware, HttpTokenVerifier
 
 app = FastAPI(
     title="Dispatcher API Gateway",
     description="Canlı Skor & Bahis Oranları Sistemi Dispatcher",
 )
 
-# Middleware'leri ekleme
-app.add_middleware(AuthMiddleware)
+# Middleware'leri Dependency Injection (DIP) ile ekleme
+token_verifier = HttpTokenVerifier()
+app.add_middleware(AuthMiddleware, token_verifier=token_verifier)
 
 def get_router_service() -> BaseRouterService:
     """
