@@ -44,14 +44,22 @@ class ErrorHandler(BaseErrorHandler):
     def __init__(self, logger: BaseLogger) -> None:
         self._logger = logger
 
-    async def handle_exception(self, request: Request, exc: Exception) -> JSONResponse:
-        self._logger.log_error(
-            f"{request.method} {request.url.path} - {type(exc).__name__}: {exc}"
-        )
+    def _format_log_message(self, request: Request, exc: Exception) -> str:
+        """SRP: Hata mesajının log formatını hazırlamakla sorumludur."""
+        return f"{request.method} {request.url.path} - {type(exc).__name__}: {str(exc)}"
+
+    def _build_response(self, exc: Exception) -> JSONResponse:
+        """SRP: İstemciye dönülecek standart API hata yanıtını oluşturur."""
         return JSONResponse(
             status_code=500,
             content={"detail": "Internal Server Error"},
         )
+
+    async def handle_exception(self, request: Request, exc: Exception) -> JSONResponse:
+        """Hata işlem akışını (koordinasyonu) yönetir."""
+        log_message = self._format_log_message(request, exc)
+        self._logger.log_error(log_message)
+        return self._build_response(exc)
 
 
 class ErrorHandlerMiddleware(BaseHTTPMiddleware):
