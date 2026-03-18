@@ -1,0 +1,26 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: dispatcher
+configfile: pytest.ini
+plugins: anyio-4.12.1, asyncio-1.3.0
+collected 12 items
+
+tests/test_error_handling.py::TestErrorHandlerOOP::test_error_handler_is_subclass_of_base FAILED [  8%]
+tests/test_error_handling.py::TestErrorHandlerOOP::test_logger_is_subclass_of_base FAILED [ 16%]
+tests/test_error_handling.py::TestErrorHandlerOOP::test_error_handler_has_handle_method FAILED [ 25%]
+tests/test_error_handling.py::TestErrorHandlerOOP::test_logger_has_log_method FAILED [ 33%]
+tests/test_error_handling.py::TestInternalServerError::test_unhandled_exception_returns_500 FAILED [ 41%]
+tests/test_error_handling.py::TestInternalServerError::test_500_response_format FAILED [ 50%]
+tests/test_error_handling.py::TestNotFoundError::test_unknown_route_returns_404_json FAILED [ 58%]
+tests/test_error_handling.py::TestNotFoundError::test_404_has_proper_detail FAILED [ 66%]
+tests/test_error_handling.py::TestBadGatewayError::test_service_unavailable_returns_502 PASSED [ 75%]
+tests/test_error_handling.py::TestBadGatewayError::test_502_json_format PASSED [ 83%]
+tests/test_error_handling.py::TestUnauthorizedError::test_missing_token_returns_401 PASSED [ 91%]
+tests/test_error_handling.py::TestUnauthorizedError::test_invalid_token_returns_401 PASSED [100%]
+
+Basarisiz Testlerin Nedenleri:
+- TestErrorHandlerOOP (4 test): ModuleNotFoundError - error_handler modulu henuz yok
+- TestInternalServerError (2 test): Beklenmeyen hatalar yakalanmiyor (500 donmuyor)
+- TestNotFoundError (2 test): Bilinmeyen URL'ler auth middleware'den 502 aliyor, 404 donmuyor
+
+============================= 8 failed, 4 passed in 9.61s =====================
