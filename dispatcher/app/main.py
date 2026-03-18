@@ -19,11 +19,15 @@ from app.services.router import (
     RouterService,
     ServiceRegistry,
 )
+from app.middleware.auth import AuthMiddleware
 
 app = FastAPI(
     title="Dispatcher API Gateway",
     description="Canlı Skor & Bahis Oranları Sistemi Dispatcher",
 )
+
+# Middleware'leri ekleme
+app.add_middleware(AuthMiddleware)
 
 def get_router_service() -> BaseRouterService:
     """

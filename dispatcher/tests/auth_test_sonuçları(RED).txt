@@ -1,0 +1,136 @@
+Warning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-8.3.4, pluggy-1.6.0
+rootdir: /home/duha/yazlab.II-I/dispatcher
+configfile: pytest.ini
+plugins: launch-testing-ros-0.19.13, ament-lint-0.12.15, ament-copyright-0.12.15, launch-testing-1.0.14, ament-flake8-0.12.15, ament-pep257-0.12.15, ament-xmllint-0.12.15, cov-6.0.0, asyncio-0.25.0, anyio-4.12.1, mock-3.6.1, colcon-core-0.20.1, timeout-2.1.0, repeat-0.9.1, rerunfailures-10.2
+asyncio: mode=auto, asyncio_default_fixture_loop_scope=None
+collected 6 items                                                              
+
+dispatcher/tests/test_auth_middleware.py FFFF..                          [100%]
+
+=================================== FAILURES ===================================
+___________ TestAuthMiddleware.test_missing_auth_header_returns_401 ____________
+
+self = <tests.test_auth_middleware.TestAuthMiddleware object at 0x7592f35d1960>
+client = <starlette.testclient.TestClient object at 0x7592f35d1810>
+
+    def test_missing_auth_header_returns_401(self, client):
+        """Authorization header eksikse istek 401 Unauthorized dönmeli."""
+        # /matches yetki gerektiren bir rotadır.
+        response = client.get("/matches")
+    
+        # Henüz middleware yazılı olmadığı için bu test başarısız olacak
+>       assert response.status_code == 401
+E       assert 502 == 401
+E        +  where 502 = <Response [502 Bad Gateway]>.status_code
+
+dispatcher/tests/test_auth_middleware.py:24: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Router request failed to http://match-service:8002/matches: 
+_________________ TestAuthMiddleware.test_valid_token_proceeds _________________
+
+self = <AsyncMock name='post' id='129273969113744'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to have been called once. Called 0 times.
+
+/usr/lib/python3.10/unittest/mock.py:908: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = <tests.test_auth_middleware.TestAuthMiddleware object at 0x7592f35d1ab0>
+mock_post = <AsyncMock name='post' id='129273969113744'>
+client = <starlette.testclient.TestClient object at 0x7592f101fc40>
+
+    @patch("httpx.AsyncClient.post", new_callable=AsyncMock)
+    def test_valid_token_proceeds(self, mock_post, client):
+        """Geçerli token ile istek işleme devam etmeli."""
+        # Auth Service'e atılan token doğrulama isteği BAŞARILI (200 OK) dönüyor gibi simüle edelim.
+        mock_post.return_value = httpx.Response(
+            status_code=200,
+            json={"user_id": "123", "role": "user"},
+            request=httpx.Request("POST", "http://auth-service:8001/auth/verify")
+        )
+    
+        # İsteğin backend servisine iletildiğini doğrulamak için router'ı da mockluyoruz
+        with patch("app.services.router.RouterService.forward_request", new_callable=AsyncMock) as mock_forward:
+            mock_forward.return_value = httpx.Response(
+                status_code=200,
+                json={"matches": []},
+                request=httpx.Request("GET", "http://fake")
+            )
+    
+            response = client.get("/matches", headers={"Authorization": "Bearer valid_token_abc"})
+    
+            assert response.status_code == 200
+>           mock_post.assert_called_once() # Auth service verification called
+E           AssertionError: Expected 'post' to have been called once. Called 0 times.
+
+dispatcher/tests/test_auth_middleware.py:50: AssertionError
+______________ TestAuthMiddleware.test_invalid_token_returns_401 _______________
+
+self = <tests.test_auth_middleware.TestAuthMiddleware object at 0x7592f35d1c60>
+mock_post = <AsyncMock name='post' id='129273969311024'>
+client = <starlette.testclient.TestClient object at 0x7592f104feb0>
+
+    @patch("httpx.AsyncClient.post", new_callable=AsyncMock)
+    def test_invalid_token_returns_401(self, mock_post, client):
+        """Geçersiz token Auth Service tarafından 401 dönünce middleware 401 dönmeli."""
+        # Auth Service token'ı geçersiz bulup 401 dönüyor
+        mock_post.return_value = httpx.Response(
+            status_code=401,
+            json={"detail": "Invalid token"},
+            request=httpx.Request("POST", "http://auth-service:8001/auth/verify")
+        )
+    
+        response = client.get("/matches", headers={"Authorization": "Bearer invalid_token"})
+    
+>       assert response.status_code == 401
+E       assert 502 == 401
+E        +  where 502 = <Response [502 Bad Gateway]>.status_code
+
+dispatcher/tests/test_auth_middleware.py:65: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Router request failed to http://match-service:8002/matches: 
+______________ TestAuthMiddleware.test_expired_token_returns_401 _______________
+
+self = <tests.test_auth_middleware.TestAuthMiddleware object at 0x7592f35d1e10>
+mock_post = <AsyncMock name='post' id='129273970005360'>
+client = <starlette.testclient.TestClient object at 0x7592f10f97b0>
+
+    @patch("httpx.AsyncClient.post", new_callable=AsyncMock)
+    def test_expired_token_returns_401(self, mock_post, client):
+        """Süresi dolmuş token Auth Service tarafından 401 dönünce middleware 401 dönmeli."""
+        # Auth Service token'ın süresi dolduğu için 401 dönüyor
+        mock_post.return_value = httpx.Response(
+            status_code=401,
+            json={"detail": "Token expired"},
+            request=httpx.Request("POST", "http://auth-service:8001/auth/verify")
+        )
+    
+        response = client.get("/matches", headers={"Authorization": "Bearer expired_token"})
+    
+>       assert response.status_code == 401
+E       assert 502 == 401
+E        +  where 502 = <Response [502 Bad Gateway]>.status_code
+
+dispatcher/tests/test_auth_middleware.py:80: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Router request failed to http://match-service:8002/matches: 
+=========================== short test summary info ============================
+FAILED dispatcher/tests/test_auth_middleware.py::TestAuthMiddleware::test_missing_auth_header_returns_401 - assert 502 == 401
+FAILED dispatcher/tests/test_auth_middleware.py::TestAuthMiddleware::test_valid_token_proceeds - AssertionError: Expected 'post' to have been called once. Called 0 times.
+FAILED dispatcher/tests/test_auth_middleware.py::TestAuthMiddleware::test_invalid_token_returns_401 - assert 502 == 401
+FAILED dispatcher/tests/test_auth_middleware.py::TestAuthMiddleware::test_expired_token_returns_401 - assert 502 == 401
+========================= 4 failed, 2 passed in 25.33s =========================
