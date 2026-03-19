@@ -29,18 +29,37 @@ class InMemoryRateLimiter(BaseRateLimiter):
         self.requests[client_id].append(now)
         return True
 
+from typing import Callable, Set, Optional
+
+class ClientIdentifierStrategy:
+    """Strategy pattern for extracting client identifier (SRP + OCP)."""
+    def extract(self, request: Request) -> str:
+        raise NotImplementedError()
+
+class IpIdentifierStrategy(ClientIdentifierStrategy):
+    """Concrete strategy: limits by client IP Address."""
+    def extract(self, request: Request) -> str:
+        return request.client.host if request.client else "127.0.0.1"
+
 class RateLimiterMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, rate_limiter: BaseRateLimiter):
+    def __init__(
+        self, 
+        app, 
+        rate_limiter: BaseRateLimiter,
+        identifier_strategy: Optional[ClientIdentifierStrategy] = None,
+        excluded_paths: Optional[Set[str]] = None
+    ):
         super().__init__(app)
         self.rate_limiter = rate_limiter
+        # Dependency Injection for strategy and configs (DIP + OCP)
+        self.identifier_strategy = identifier_strategy or IpIdentifierStrategy()
+        self.excluded_paths = excluded_paths or set()
 
     async def dispatch(self, request: Request, call_next):
-        # Allow metrics endpoint to bypass rate limiting (used by Prometheus)
-        if request.url.path == "/metrics":
+        if request.url.path in self.excluded_paths:
             return await call_next(request)
 
-        # Extract client IP as identifier
-        client_id = request.client.host if request.client else "127.0.0.1"
+        client_id = self.identifier_strategy.extract(request)
         
         if not self.rate_limiter.is_allowed(client_id):
             return JSONResponse(

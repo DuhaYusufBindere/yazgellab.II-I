@@ -35,8 +35,14 @@ error_handler = ErrorHandler(logger=logger)
 app.add_middleware(ErrorHandlerMiddleware, error_handler=error_handler)
 
 # 2. Rate Limiter Middleware
+from app.middleware.rate_limiter import IpIdentifierStrategy
 rate_limiter = InMemoryRateLimiter(limit=5, window=1.0)
-app.add_middleware(RateLimiterMiddleware, rate_limiter=rate_limiter)
+app.add_middleware(
+    RateLimiterMiddleware, 
+    rate_limiter=rate_limiter,
+    identifier_strategy=IpIdentifierStrategy(),
+    excluded_paths={"/metrics"}
+)
 
 # 3. Auth Middleware (Hata yakalayıcının altında çalışır)
 token_verifier = HttpTokenVerifier()
