@@ -23,12 +23,12 @@ class MatchUpdate(BaseModel):
 
 class MatchResponse(MatchBase):
     """Veritabanından dönen maç yanıt şeması."""
-    id: str = Field(..., description="Maçın benzersiz ID'si")
+    id: str = Field(..., validation_alias="_id", description="Maçın benzersiz ID'si")
     start_time: datetime
 
-    class Config:
-        populate_by_name = True
-        alias_generator = lambda s: "_id" if s == "id" else s
+    model_config = {
+        "populate_by_name": True
+    }
 
 class MatchInDB(MatchResponse):
     """Veritabanında tutulan tam eşleşme modeli."""

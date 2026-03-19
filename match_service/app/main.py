@@ -1,15 +1,22 @@
-"""Match Service – Canlı maç skoru yönetimi."""
-
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from app.database import DatabaseManager
+from app.routes.matches import router as matches_router
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    DatabaseManager.connect_to_database()
+    yield
+    DatabaseManager.close_database_connection()
 
 app = FastAPI(
     title="Match Service",
-    description="Canlı maç skorlarının yönetimi ve dağıtımı servisi.",
-    version="0.1.0",
+    description="Canlı skor ve maç verilerini yöneten RMM uyumlu mikroservis.",
+    lifespan=lifespan
 )
 
+app.include_router(matches_router)
 
-@app.get("/health", tags=["health"])
+@app.get("/health")
 async def health_check():
-    """Match Service sağlık kontrolü."""
     return {"status": "ok", "service": "match-service"}
