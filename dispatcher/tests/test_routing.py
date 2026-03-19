@@ -26,6 +26,14 @@ from app.main import app
 # Fixtures
 # ---------------------------------------------------------------------------
 
+@pytest.fixture(autouse=True)
+def mock_auth_verify():
+    """Tüm routing testleri için Auth doğrulamasını başarılı olarak (200 OK) mocklar."""
+    with patch("app.middleware.auth.HttpTokenVerifier.verify_token", new_callable=AsyncMock) as mock_verify:
+        mock_verify.return_value = True
+        yield mock_verify
+
+
 @pytest.fixture
 def client():
     """Senkron test istemcisi oluşturur."""
@@ -71,7 +79,7 @@ class TestRouting:
         """
         mock_forward.return_value = _mock_response(200, {"matches": []})
 
-        response = client.get("/matches")
+        response = client.get("/matches", headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 200
         mock_forward.assert_called_once()
@@ -85,7 +93,7 @@ class TestRouting:
         """
         mock_forward.return_value = _mock_response(200, {"id": "1", "home": "GS", "away": "FB"})
 
-        response = client.get("/matches/1")
+        response = client.get("/matches/1", headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 200
         mock_forward.assert_called_once()
@@ -97,7 +105,7 @@ class TestRouting:
         """
         mock_forward.return_value = _mock_response(200, {"odds": []})
 
-        response = client.get("/odds")
+        response = client.get("/odds", headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 200
         mock_forward.assert_called_once()
@@ -111,7 +119,7 @@ class TestRouting:
         """
         mock_forward.return_value = _mock_response(200, {"favorites": []})
 
-        response = client.get("/users/42/favorites")
+        response = client.get("/users/42/favorites", headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 200
         mock_forward.assert_called_once()
@@ -129,7 +137,7 @@ class TestHTTPMethods:
         """POST metodu korunarak hedef servise iletilmeli."""
         mock_forward.return_value = _mock_response(201, {"id": "new-match"})
 
-        response = client.post("/matches", json={"home": "GS", "away": "FB"})
+        response = client.post("/matches", json={"home": "GS", "away": "FB"}, headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 201
         mock_forward.assert_called_once()
@@ -139,7 +147,7 @@ class TestHTTPMethods:
         """PUT metodu korunarak hedef servise iletilmeli."""
         mock_forward.return_value = _mock_response(200, {"updated": True})
 
-        response = client.put("/matches/1", json={"home_score": 2, "away_score": 1})
+        response = client.put("/matches/1", json={"home_score": 2, "away_score": 1}, headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 200
         mock_forward.assert_called_once()
@@ -149,7 +157,7 @@ class TestHTTPMethods:
         """DELETE metodu korunarak hedef servise iletilmeli."""
         mock_forward.return_value = _mock_response(204)
 
-        response = client.delete("/matches/1")
+        response = client.delete("/matches/1", headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 204
         mock_forward.assert_called_once()
@@ -164,7 +172,7 @@ class TestUnknownRoutes:
         """
         Hiçbir servise eşleşmeyen URL'ler 404 Not Found döndürmeli.
         """
-        response = client.get("/nonexistent/endpoint")
+        response = client.get("/nonexistent/endpoint", headers={"Authorization": "Bearer fake_token"})
 
         assert response.status_code == 404
         data = response.json()
@@ -174,7 +182,7 @@ class TestUnknownRoutes:
         """
         Kök URL (/) bir bilgi mesajı veya 404 dönmeli.
         """
-        response = client.get("/")
+        response = client.get("/", headers={"Authorization": "Bearer fake_token"})
 
         # Kök endpoint ya bilgi döndürür ya da 404
         assert response.status_code in (200, 404)
