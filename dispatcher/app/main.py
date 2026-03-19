@@ -21,6 +21,8 @@ from app.services.router import (
 )
 from app.middleware.auth import AuthMiddleware, HttpTokenVerifier
 from app.middleware.error_handler import ErrorHandlerMiddleware, ErrorHandler, AppLogger
+from app.middleware.rate_limiter import RateLimiterMiddleware, InMemoryRateLimiter
+from app.routes.metrics import setup_metrics
 
 app = FastAPI(
     title="Dispatcher API Gateway",
@@ -32,9 +34,16 @@ logger = AppLogger()
 error_handler = ErrorHandler(logger=logger)
 app.add_middleware(ErrorHandlerMiddleware, error_handler=error_handler)
 
-# 2. Auth Middleware (Hata yakalayıcının altında çalışır)
+# 2. Rate Limiter Middleware
+rate_limiter = InMemoryRateLimiter(limit=5, window=1.0)
+app.add_middleware(RateLimiterMiddleware, rate_limiter=rate_limiter)
+
+# 3. Auth Middleware (Hata yakalayıcının altında çalışır)
 token_verifier = HttpTokenVerifier()
 app.add_middleware(AuthMiddleware, token_verifier=token_verifier)
+
+# Setup Prometheus Metrics (/metrics endpoint)
+setup_metrics(app)
 
 def get_router_service() -> BaseRouterService:
     """

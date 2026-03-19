@@ -1,0 +1,16 @@
+Warning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-8.3.4, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/duha/yazlab.II-I/dispatcher
+configfile: pytest.ini
+plugins: launch-testing-ros-0.19.13, ament-lint-0.12.15, ament-copyright-0.12.15, launch-testing-1.0.14, ament-flake8-0.12.15, ament-pep257-0.12.15, ament-xmllint-0.12.15, cov-6.0.0, asyncio-0.25.0, anyio-4.12.1, mock-3.6.1, colcon-core-0.20.1, timeout-2.1.0, repeat-0.9.1, rerunfailures-10.2
+asyncio: mode=auto, asyncio_default_fixture_loop_scope=None
+collected 2 items                                                              
+
+tests/test_rate_limit.py::TestRateLimiter::test_rate_limit_exceeded_returns_429 PASSED [ 50%]
+tests/test_metrics.py::TestMetrics::test_metrics_endpoint_returns_prometheus_format PASSED [100%]
+
+============================== 2 passed in 0.30s ===============================

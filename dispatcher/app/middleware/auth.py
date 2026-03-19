@@ -50,7 +50,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self.token_verifier = token_verifier
         
         # OCP: Bu listeler dışarıdan config olarak da alınabilir.
-        self.public_paths = {"/health", "/"}
+        self.public_paths = {"/health", "/", "/metrics"}
         self.public_prefixes = ("/auth/",)
 
     def _is_public_route(self, path: str) -> bool:
