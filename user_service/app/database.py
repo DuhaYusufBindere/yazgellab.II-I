@@ -7,8 +7,10 @@ class DatabaseManager:
 
     @classmethod
     def connect_to_database(cls):
-        mongodb_uri = os.getenv("MONGODB_URI", "mongodb://mongodb:27017")
-        db_name = os.getenv("MONGODB_DB_NAME", "user_service")
+        mongo_host = os.getenv("MONGO_HOST", "localhost")
+        mongo_port = os.getenv("MONGO_PORT", "27017")
+        mongodb_uri = os.getenv("MONGODB_URI", f"mongodb://{mongo_host}:{mongo_port}")
+        db_name = os.getenv("MONGO_DB", os.getenv("MONGODB_DB_NAME", "user_service"))
         
         cls.client = AsyncIOMotorClient(mongodb_uri)
         cls.db = cls.client[db_name]

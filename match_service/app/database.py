@@ -10,8 +10,10 @@ class DatabaseManager:
     @classmethod
     def connect_to_database(cls):
         """Uygulama başladığında MongoDB'ye bağlanır."""
-        mongo_uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-        db_name = os.getenv("MONGODB_DB_NAME", "match_db")
+        mongo_host = os.getenv("MONGO_HOST", "localhost")
+        mongo_port = os.getenv("MONGO_PORT", "27017")
+        mongo_uri = os.getenv("MONGODB_URI", f"mongodb://{mongo_host}:{mongo_port}")
+        db_name = os.getenv("MONGO_DB", os.getenv("MONGODB_DB_NAME", "match_db"))
         
         cls.client = AsyncIOMotorClient(mongo_uri)
         cls.db = cls.client[db_name]

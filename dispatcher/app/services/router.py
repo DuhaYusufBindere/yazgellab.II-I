@@ -124,7 +124,7 @@ class RouterService(BaseRouterService):
         if base_url is None:
             return None
 
-        return f"{base_url}/{path}"
+        return f"{base_url}/{path.strip('/')}"
 
     # -- İstek Yönlendirme ---------------------------------------------------
 
@@ -144,7 +144,7 @@ class RouterService(BaseRouterService):
 
         # Enjekte edilen client yoksa geçici client aç
         owns_client = self._http_client is None
-        client = self._http_client or httpx.AsyncClient()
+        client = self._http_client or httpx.AsyncClient(follow_redirects=True)
 
         try:
             response = await client.request(

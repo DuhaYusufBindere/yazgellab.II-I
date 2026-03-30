@@ -21,7 +21,7 @@ class HttpTokenVerifier(BaseTokenVerifier):
             async with httpx.AsyncClient() as client:
                 response = await client.post(
                     self.auth_service_url,
-                    headers={"Authorization": f"Bearer {token}"}
+                    json={"token": token}
                 )
             if response.status_code != 200:
                 try:

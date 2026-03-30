@@ -59,7 +59,7 @@ class MatchService:
             }
             async with httpx.AsyncClient() as client:
                 await client.post(
-                    f"{self._betting_service_url}/odds/update_from_match", 
+                    f"{self._betting_service_url}/odds/score-update", 
                     json=payload
                 )
         except Exception as e:
