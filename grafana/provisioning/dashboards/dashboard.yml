@@ -1,12 +1,11 @@
 apiVersion: 1
 
 providers:
-  - name: "default"
+  - name: "Yazgellab Dashboards"
     orgId: 1
-    folder: "Dispatcher"
+    folder: ""
     type: file
     disableDeletion: false
-    editable: true
+    updateIntervalSeconds: 10
     options:
       path: /etc/grafana/provisioning/dashboards
-      foldersFromFilesStructure: false
