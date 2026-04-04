@@ -214,4 +214,3 @@ Bu projenin sonucunda Monolitik ve Spagetti kod devrinden, birbirinden habersiz 
 - **Sınır:** Rate limiter ve MongoDB kayıt bloklamaları devasa (Milyon) isteklerde sunucu kaynaklı gecikmelere sebep olmaya başlar.
 - **Geliştirme Önerisi:** Proje bulut (AWS/GCP) altyapısına taşınıp Load Balancer arkasında Kubernetes (K8s) ile yatayda otomatik ölçeklenebilir hale getirilirse sınırsız trafiğe cevap verebilir potansiyeldedir.
 
-*- "Hatasız sistem yoktur, iyi izlenen (monitor edilen) ve hatalara karşı kendi önlemini alabilen ölçeklenmiş sistem vardır."*
